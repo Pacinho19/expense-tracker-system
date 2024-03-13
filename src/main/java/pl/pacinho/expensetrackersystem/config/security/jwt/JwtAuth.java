@@ -35,7 +35,7 @@ public class JwtAuth {
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(username)
-                .setExpiration(DateUtils.convert(LocalDateTime.now().plus(10, ChronoUnit.MINUTES)))
+                //.setExpiration(DateUtils.convert(LocalDateTime.now().plus(10, ChronoUnit.MINUTES)))
                 .signWith(SignatureAlgorithm.HS256, SECRET)
                 .compact();
     }

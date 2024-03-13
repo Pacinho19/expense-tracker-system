@@ -20,6 +20,6 @@ public class V4__init_user_data extends BaseJavaMigration {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(new SingleConnectionDataSource(context.getConnection(), true));
         jdbcTemplate.execute("insert into expense_tracker_user(name, login, role, password) values ('mother', 'mother', 'ROLE_ADMIN', '" + cryptoConfig.passwordEncoder().encode("mother") + "')");
         jdbcTemplate.execute("insert into expense_tracker_user(name, login, role, password) values ('father', 'father', 'ROLE_SUPER_ADMIN', '" + cryptoConfig.passwordEncoder().encode("father") + "')");
-        jdbcTemplate.execute("insert into expense_tracker_user(name, login, role, password) values ('kid', 'kid', 'ROLE_USER', '" + cryptoConfig.passwordEncoder().encode("user") + "')");
+        jdbcTemplate.execute("insert into expense_tracker_user(name, login, role, password) values ('kid', 'kid', 'ROLE_USER', '" + cryptoConfig.passwordEncoder().encode("kid") + "')");
     }
 }
