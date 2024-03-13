@@ -10,15 +10,21 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import pl.pacinho.expensetrackersystem.config.security.jwt.JwtAuth;
 import pl.pacinho.expensetrackersystem.expense.model.dto.ExpenseDto;
 import pl.pacinho.expensetrackersystem.expense.model.entity.Expense;
 import pl.pacinho.expensetrackersystem.expense.model.enums.Category;
 import pl.pacinho.expensetrackersystem.expense.repository.ExpenseRepository;
 import pl.pacinho.expensetrackersystem.expense.service.ExpenseService;
+import pl.pacinho.expensetrackersystem.user.service.ExpenseTrackerUserService;
 
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
@@ -28,7 +34,6 @@ import java.time.LocalDateTime;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ExpenseControllerE2ETest {
 
@@ -41,8 +46,28 @@ class ExpenseControllerE2ETest {
     @Autowired
     private ExpenseRepository expenseRepository;
 
+    @Autowired
+    private JwtAuth jwtAuth;
+
     private String apiPath() {
         return "http://localhost:" + port;
+    }
+
+    @Test
+    void httpInsertNewTaskShouldReturnedHttpStatus403WhenAuthorizeHeaderNotExists() {
+        //given
+        Expense expense = Expense.builder()
+                .name("Expense1")
+                .category(Category.ENTERTAINMENT)
+                .amount(BigDecimal.TEN)
+                .date(LocalDate.now())
+                .build();
+
+        //when
+        ResponseEntity<Object> responseEntity = testRestTemplate.postForEntity(apiPath() + "/expense", expense, Object.class);
+
+        //then
+        assertThat(responseEntity.getStatusCode(), equalTo(HttpStatus.FORBIDDEN));
     }
 
     @Test
@@ -56,8 +81,12 @@ class ExpenseControllerE2ETest {
                 .date(LocalDate.now())
                 .build();
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + jwtAuth.generateToken("father"));
+        HttpEntity<Expense> entity = new HttpEntity<>(expense, headers);
+
         //when
-        URI uri = testRestTemplate.postForLocation(apiPath() + "/expense", expense);
+        URI uri = testRestTemplate.postForLocation(apiPath() + "/expense", entity);
 
         //then
         assertThat(uri.toURL().toString(), equalTo(apiPath() + "/expense/" + (maxId + 1)));

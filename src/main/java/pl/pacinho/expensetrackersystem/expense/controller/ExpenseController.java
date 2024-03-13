@@ -1,5 +1,6 @@
 package pl.pacinho.expensetrackersystem.expense.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@SecurityRequirement(name = "bearerAuth")
 @Validated
 @RequiredArgsConstructor
 @RequestMapping("/expense")

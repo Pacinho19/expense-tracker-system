@@ -16,3 +16,6 @@ spring:
 
 flyway:
   baselineOnMigrate: true
+
+token:
+  secret: "laCtSRDR6sVzYjs6o8s6MR172FK44cuC"
