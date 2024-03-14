@@ -38,7 +38,7 @@ public class ExpenseController {
     private final ExpensesMonthlyReportGenerator expensesMonthlyReportGenerator;
 
 
-    @GetMapping(params = {"!category", "!startDate", "!endDate"})
+    @GetMapping(params = {"!category", "!startDate", "!endDate", "!name"})
     ResponseEntity<List<ExpenseDto>> getExpense() {
         return ResponseEntity.ok(
                 expenseService.findAll()
@@ -53,11 +53,12 @@ public class ExpenseController {
     }
 
     @GetMapping
-    ResponseEntity<List<ExpenseDto>> findByCategoryOrDate(@RequestParam(value = "category", required = false) Category category,
-                                                          @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-                                                          @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+    ResponseEntity<List<ExpenseDto>> findByNameOrCategoryOrDate(@RequestParam(value = "name", required = false) String name,
+                                                                @RequestParam(value = "category", required = false) Category category,
+                                                                @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+                                                                @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
         return ResponseEntity.ok(
-                expenseService.findAllByCategoryOrDate(category, startDate, endDate)
+                expenseService.findAllByNameCategoryOrDateRange(name, category, startDate, endDate)
         );
     }
 

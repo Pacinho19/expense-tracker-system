@@ -38,7 +38,7 @@ public class ExpenseFilterRepository {
                 );
 
         TypedQuery<Expense> query = entityManager.createQuery(criteriaQuery);
-        addParams(query, expenseFilterDto);
+//        addParams(query, expenseFilterDto);
 
         List<Expense> result = query.getResultList();
 
@@ -59,8 +59,6 @@ public class ExpenseFilterRepository {
         expenseFilterDto.getFilters()
                 .stream()
                 .filter(filterDto -> filterDto.value() != null)
-                .forEach(filterDto -> {
-                    query.setParameter(filterDto.paramName(), filterDto.value());
-                });
+                .forEach(filterDto -> query.setParameter(filterDto.paramName(), filterDto.value()));
     }
 }

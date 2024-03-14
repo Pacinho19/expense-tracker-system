@@ -59,12 +59,13 @@ public class ExpenseService {
         );
     }
 
-    public List<ExpenseDto> findAllByCategoryOrDate(Category category, LocalDate startDate, LocalDate endDate) {
+    public List<ExpenseDto> findAllByNameCategoryOrDateRange(String name, Category category, LocalDate startDate, LocalDate endDate) {
         ExpenseFilterDto expenseFilterDto = ExpenseFilterDto.builder()
                 .filters(List.of(
                         new FieldFilterDto("category", "category", category, PredicateFunction.EQUAL_TO),
-                        new FieldFilterDto("date", "startDate", startDate, PredicateFunction.GREATER_THAN_OR_EQUAL_TO),
-                        new FieldFilterDto("date", "endDate", endDate, PredicateFunction.LESS_THAN_OR_EQUAL_TO)
+                        new FieldFilterDto("name", "name", name, PredicateFunction.CONTAINS),
+                        new FieldFilterDto("date", "startDate", startDate, PredicateFunction.DATE_GREATER_THAN_OR_EQUAL_TO),
+                        new FieldFilterDto("date", "endDate", endDate, PredicateFunction.DATE_LESS_THAN_OR_EQUAL_TO)
                 ))
                 .build();
 
