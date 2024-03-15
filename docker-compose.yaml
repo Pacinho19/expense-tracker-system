@@ -42,7 +42,7 @@ services:
 
   expense-tracker-system-fronted:
     container_name: expense-tracker-system-frontend
-    image: pacinho/expense-tracker-system-front:0.5-BETA
+    image: pacinho/expense-tracker-system-front:1.0.0
     ports:
       - 80:80
     depends_on:
