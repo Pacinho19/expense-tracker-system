@@ -4,7 +4,7 @@ create table expense(
     name varchar(50) not null,
     category varchar(50) not null ,
     amount NUMERIC(10, 2) not null,
-    "DATE" date not null,
+    date date not null,
     created_on timestamp,
     updated_on timestamp
 );
