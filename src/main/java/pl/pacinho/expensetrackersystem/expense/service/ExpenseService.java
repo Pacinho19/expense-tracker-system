@@ -1,8 +1,10 @@
 package pl.pacinho.expensetrackersystem.expense.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import pl.pacinho.expensetrackersystem.expense.model.dto.ExpenseDto;
+import pl.pacinho.expensetrackersystem.expense.model.dto.ExpensePage;
 import pl.pacinho.expensetrackersystem.expense.search.model.ExpenseFilterDto;
 import pl.pacinho.expensetrackersystem.expense.search.model.FieldFilterDto;
 import pl.pacinho.expensetrackersystem.expense.search.model.PredicateFunction;
@@ -69,10 +71,23 @@ public class ExpenseService {
                 ))
                 .build();
 
-        return expenseFilterRepository.findAll(expenseFilterDto)
-                .stream()
-                .map(ExpenseMapper::convertToDto)
-                .toList();
+        return ExpenseMapper.convertToDtoList(
+                expenseFilterRepository.findAll(expenseFilterDto)
+        );
     }
 
+    public ExpensePage findAllPageable(int pageNumber, int size) {
+        if (pageNumber == 0)
+            pageNumber = 1;
+
+        if (size == 0)
+            size = 10;
+
+        Pageable pageable = PageRequest.of(pageNumber - 1, size, Sort.by("id"));
+        int pageSize = pageable.getPageSize();
+        int currentPage = pageable.getPageNumber();
+        Page<Expense> expenses = expenseRepository.findAll(pageable);
+        List<ExpenseDto> expensesDtos = ExpenseMapper.convertToDtoList(expenses.getContent());
+        return new ExpensePage(expensesDtos, currentPage + 1, expenses.getTotalElements(), expenses.getTotalPages(), pageSize);
+    }
 }

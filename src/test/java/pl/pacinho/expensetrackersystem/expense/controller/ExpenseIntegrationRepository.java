@@ -2,6 +2,9 @@ package pl.pacinho.expensetrackersystem.expense.controller;
 
 import lombok.SneakyThrows;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import pl.pacinho.expensetrackersystem.expense.model.entity.Expense;
 import pl.pacinho.expensetrackersystem.expense.repository.ExpenseRepository;
@@ -50,5 +53,10 @@ public class ExpenseIntegrationRepository implements ExpenseRepository {
     @Override
     public List<Expense> findAll() {
         return new ArrayList<>(expenses.values());
+    }
+
+    @Override
+    public Page<Expense> findAll(Pageable pageable) {
+        return new PageImpl<>(findAll());
     }
 }

@@ -3,7 +3,9 @@ package pl.pacinho.expensetrackersystem.expense.model.mapper;
 import pl.pacinho.expensetrackersystem.expense.model.dto.ExpenseDto;
 import pl.pacinho.expensetrackersystem.expense.model.entity.Expense;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class ExpenseMapper {
     public static Expense convertToEntity(ExpenseDto expenseDto) {
@@ -21,5 +23,11 @@ public class ExpenseMapper {
 
     public static ExpenseDto convertToDto(Expense expense) {
         return ExpenseDto.of(expense);
+    }
+
+    public static List<ExpenseDto> convertToDtoList(List<Expense> content) {
+        return content.stream()
+                .map(ExpenseMapper::convertToDto)
+                .collect(Collectors.toList());
     }
 }

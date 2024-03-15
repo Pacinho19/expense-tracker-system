@@ -11,6 +11,7 @@ import pl.pacinho.expensetrackersystem.expense.controller.tools.HttpFileResponse
 import pl.pacinho.expensetrackersystem.expense.export.model.ExportFormat;
 import pl.pacinho.expensetrackersystem.expense.export.service.ExpenseExportService;
 import pl.pacinho.expensetrackersystem.expense.model.dto.ExpenseDto;
+import pl.pacinho.expensetrackersystem.expense.model.dto.ExpensePage;
 import pl.pacinho.expensetrackersystem.expense.model.entity.Expense;
 import pl.pacinho.expensetrackersystem.expense.model.enums.Category;
 import pl.pacinho.expensetrackersystem.expense.report.service.ExpensesMonthlyReportGenerator;
@@ -38,10 +39,17 @@ public class ExpenseController {
     private final ExpensesMonthlyReportGenerator expensesMonthlyReportGenerator;
 
 
-    @GetMapping(params = {"!category", "!startDate", "!endDate", "!name"})
+    @GetMapping(params = {"!category", "!startDate", "!endDate", "!name", "!size", "!page"})
     ResponseEntity<List<ExpenseDto>> getExpense() {
         return ResponseEntity.ok(
                 expenseService.findAll()
+        );
+    }
+
+    @GetMapping
+    ResponseEntity<ExpensePage> getExpense(@RequestParam(value = "size", required = false, defaultValue = "20") int size, @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
+        return ResponseEntity.ok(
+               expenseService.findAllPageable(page, size)
         );
     }
 
@@ -52,7 +60,8 @@ public class ExpenseController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping
+    @GetMapping(params = {"!size", "!page"})
+
     ResponseEntity<List<ExpenseDto>> findByNameOrCategoryOrDate(@RequestParam(value = "name", required = false) String name,
                                                                 @RequestParam(value = "category", required = false) Category category,
                                                                 @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,

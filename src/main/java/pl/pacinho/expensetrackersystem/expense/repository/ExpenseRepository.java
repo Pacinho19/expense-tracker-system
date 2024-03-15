@@ -1,5 +1,7 @@
 package pl.pacinho.expensetrackersystem.expense.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 import pl.pacinho.expensetrackersystem.expense.model.entity.Expense;
 
@@ -18,4 +20,5 @@ public interface ExpenseRepository {
     Optional<Expense> findById(int id);
 
     List<Expense> findAll();
+    Page<Expense> findAll(Pageable pageable);
 }
