@@ -1,0 +1,59 @@
+version: "3.9"
+
+services:
+
+  expense_tracker_system_db:
+    container_name: expense-tracker-system-db
+    image: mariadb:latest
+    ports:
+      - 3310:3306
+    environment:
+      - MARIADB_DATABASE=expense-tracker-system
+      - MARIADB_USER=expense
+      - MARIADB_PASSWORD=1234
+      - MARIADB_ROOT_PASSWORD=1234
+    networks:
+      - expense-tracker-system-network
+    healthcheck:
+      test: [ "CMD", "healthcheck.sh", "--su-mysql", "--connect", "--innodb_initialized" ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  expense-tracker-system-service:
+    container_name: expense-tracker-system-service
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    depends_on:
+      expense_tracker_system_db:
+        condition: service_healthy
+    environment:
+      - spring.profiles.active=prod
+      - spring.datasource.url=jdbc:mysql://expense_tracker_system_db:3306/expense-tracker-system
+      - spring.datasource.username=expense
+      - spring.datasource.password=1234
+    volumes:
+      - expense-tracker-system-app-volume:/app
+    networks:
+      - expense-tracker-system-network
+
+  expense-tracker-system-fronted:
+    container_name: expense-tracker-system-frontend
+    image: pacinho/expense-tracker-system-front:0.5-BETA
+    ports:
+      - 80:80
+    depends_on:
+      - expense-tracker-system-service
+    networks:
+      - expense-tracker-system-network
+
+volumes:
+  expense-tracker-system-app-volume:
+    driver: local
+
+networks:
+  expense-tracker-system-network:
+    driver: bridge

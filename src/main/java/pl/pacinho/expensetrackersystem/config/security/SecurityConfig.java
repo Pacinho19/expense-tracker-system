@@ -42,7 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .cors().and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/expense/{\\d+}", "/expense", "/api/ping").authenticated()
+                .antMatchers(HttpMethod.GET, "/expense/{\\d+}", "/expense", "/api/**").authenticated()
                 .antMatchers(HttpMethod.GET, "/expense/export", "/expense/monthly-report/{\\d+}/{\\d+}").hasAnyRole("ADMIN", "SUPER_ADMIN")
                 .antMatchers(HttpMethod.POST).hasAnyRole("ADMIN", "SUPER_ADMIN")
                 .antMatchers(HttpMethod.PUT).hasAnyRole("SUPER_ADMIN")

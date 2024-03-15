@@ -1,6 +1,5 @@
 package pl.pacinho.expensetrackersystem.expense.controller;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -51,7 +50,7 @@ class ExpenseControllerIntegrationTest {
     }
 
     @Test
-    void httpGetExpenseByIdShouldReturnedHttpStatus403WhenAuthorizeHeaderNotExists() throws Exception {
+    void httpGetExpenseByIdShouldReturnedHttpStatus401WhenAuthorizeHeaderNotExists() throws Exception {
         //given
         int id = 1;
 
