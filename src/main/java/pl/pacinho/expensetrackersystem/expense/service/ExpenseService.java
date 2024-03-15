@@ -38,10 +38,7 @@ public class ExpenseService {
     }
 
     public List<ExpenseDto> findAll() {
-        return expenseRepository.findAll()
-                .stream()
-                .map(ExpenseMapper::convertToDto)
-                .toList();
+        return ExpenseMapper.convertToDtoList(expenseRepository.findAll());
     }
 
     public void delete(int id) {
@@ -77,12 +74,6 @@ public class ExpenseService {
     }
 
     public ExpensePage findAllPageable(int pageNumber, int size) {
-        if (pageNumber == 0)
-            pageNumber = 1;
-
-        if (size == 0)
-            size = 10;
-
         Pageable pageable = PageRequest.of(pageNumber - 1, size, Sort.by("id"));
         int pageSize = pageable.getPageSize();
         int currentPage = pageable.getPageNumber();

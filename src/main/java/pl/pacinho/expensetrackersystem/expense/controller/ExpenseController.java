@@ -38,7 +38,6 @@ public class ExpenseController {
     private final ExpenseExportService expenseExportService;
     private final ExpensesMonthlyReportGenerator expensesMonthlyReportGenerator;
 
-
     @GetMapping(params = {"!category", "!startDate", "!endDate", "!name", "!size", "!page"})
     ResponseEntity<List<ExpenseDto>> getExpense() {
         return ResponseEntity.ok(
@@ -47,9 +46,10 @@ public class ExpenseController {
     }
 
     @GetMapping
-    ResponseEntity<ExpensePage> getExpense(@RequestParam(value = "size", required = false, defaultValue = "20") int size, @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
+    ResponseEntity<ExpensePage> getExpense(@RequestParam(value = "size", required = false, defaultValue = "20") @Min(1) int size,
+                                           @RequestParam(value = "page", required = false, defaultValue = "1") @Min(1) int page) {
         return ResponseEntity.ok(
-               expenseService.findAllPageable(page, size)
+                expenseService.findAllPageable(page, size)
         );
     }
 
@@ -61,7 +61,6 @@ public class ExpenseController {
     }
 
     @GetMapping(params = {"!size", "!page"})
-
     ResponseEntity<List<ExpenseDto>> findByNameOrCategoryOrDate(@RequestParam(value = "name", required = false) String name,
                                                                 @RequestParam(value = "category", required = false) Category category,
                                                                 @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
