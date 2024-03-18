@@ -15,6 +15,6 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedOrigins("http://127.0.0.1:3000", "http://localhost")
                 .allowedMethods("*")
                 .allowedHeaders("*")
-                .exposedHeaders("Location");
+                .exposedHeaders("Location", "Content-Disposition");
     }
 }
