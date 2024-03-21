@@ -133,7 +133,6 @@ class DateUtilsTest {
         //when
         Date date = DateUtils.convert(localDate);
 
-
         //then
         assertThat(date, nullValue());
     }
@@ -145,7 +144,6 @@ class DateUtilsTest {
 
         //when
         Date date = DateUtils.convert(localDateTime);
-
 
         //then
         assertThat(date, notNullValue());
